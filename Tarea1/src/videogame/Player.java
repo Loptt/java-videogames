@@ -51,77 +51,129 @@ public class Player extends Item {
             setxVel(getxVel() + getAcc());
         }
         
-        if (getxVel() >= 10) {
-            setxVel(10);
+        if (getxVel() >= 15) {
+            setxVel(15);
         }
         
-        if (getyVel() >= 10) {
-            setyVel(10);
+        if (getxVel() <= -15) {
+            setxVel(-15);
+        }
+        
+        if (getyVel() >= 15) {
+            setyVel(15);
+        }
+        
+        if (getyVel() <= -15) {
+            setyVel(-15);
         }
        
         setX(getX() + xVel);
         setY(getY() + yVel);
         
-        if (getX() + 60 >= game.getWidth()) {
+        if (getX() + 140 >= game.getWidth()) {
             setxVel(getxVel()*-1);
         }
         else if (getX() <= -30) {
             setxVel(getxVel()*-1);
         }
         
-        if (getY() + 80 >= game.getHeight()) {
+        if (getY() + 90 >= game.getHeight()) {
             setyVel(getyVel()*-1);
         }
-        else if (getY() <= -20) {
+        else if (getY() <= -10) {
             setyVel(getyVel()*-1);
         }
     }
-
+    
     @Override
     public void render(Graphics g) {
         g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
     }
-
+    
+    /**
+     * to get direction
+     * @return direction
+     */
     public int getDirection() {
         return direction;
     }
-
+    
+    /**
+     * to get width
+     * @return width
+     */
     public int getWidth() {
         return width;
     }
-
+    
+    /**
+     * to get height
+     * @return height
+     */
     public int getHeight() {
         return height;
     }
-
+    
+    /**
+     * to get xVel
+     * @return xVel
+     */
     public int getxVel() {
         return xVel;
     }
-
+    
+    /**
+     * to get yVel
+     * @return yVel
+     */
     public int getyVel() {
         return yVel;
     }
-
+    
+    /**
+     * to get acc
+     * @return acc
+     */
     public int getAcc() {
         return acc;
     }
-
+    
+    /**
+     * to set xVel
+     * @param xVel to modify 
+     */
     public void setxVel(int xVel) {
         this.xVel = xVel;
     }
-
+    
+    /**
+     * to set yVel
+     * @param yVel to modify 
+     */
     public void setyVel(int yVel) {
         this.yVel = yVel;
     }
     
+    /**
+     * to set direction
+     * @param direction to modify 
+     */
     public void setDirection(int direction) {
         this.direction = direction;
     }
-
+    
+    /**
+     * to set height
+     * @param height to modify 
+     */
     public void setHeight(int height) {
         this.height = height;
     }
-
+    
+    /**
+     * to set width
+     * @param width to modify 
+     */
     public void setWidth(int width) {
         this.width = width;
     }

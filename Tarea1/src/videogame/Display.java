@@ -35,7 +35,7 @@ public class Display {
         createDisplay();
     }	
     
-    /*
+    /**
     * create the app and the canvas and add the canvas to the window app
     */
     public void createDisplay() {
@@ -56,14 +56,18 @@ public class Display {
         jframe.pack();
     }
     
-    /*
+    /**
     * to get the canvas of the game
-    * @return the canvas
+    * @return  the canvas
     */
     public Canvas getCanvas() {
         return canvas;
     }
-
+    
+    /**
+     * to get the jframe
+     * @return  the jframe
+     */
     public JFrame getJframe() {
         return jframe;
     }

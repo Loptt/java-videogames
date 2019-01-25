@@ -20,9 +20,11 @@ public class KeyManager implements KeyListener {
     public boolean right;
     
     private boolean keys[];
+    private boolean arrowKeys[];
     
     public KeyManager() {
         keys = new boolean[256];
+        arrowKeys = new boolean[4];
     }
 
     @Override
@@ -41,9 +43,48 @@ public class KeyManager implements KeyListener {
     }
     
     public void tick() {
-        up = keys[KeyEvent.VK_UP];
-        down = keys[KeyEvent.VK_DOWN];
-        left = keys[KeyEvent.VK_LEFT];
-        right = keys[KeyEvent.VK_RIGHT];
+        if (keys[KeyEvent.VK_UP]) {
+            if (!arrowKeys[0]) {
+                up = true;
+                arrowKeys[0] = true;
+            }
+            else {
+                up = false;
+            }
+        } else
+            arrowKeys[0] = false;
+        
+        if (keys[KeyEvent.VK_DOWN]) {
+            if (!arrowKeys[1]) {
+                down = true;
+                arrowKeys[1] = true;
+            }
+            else {
+                down = false;
+            }
+        } else
+            arrowKeys[1] = false;
+        
+        if (keys[KeyEvent.VK_LEFT]) {
+            if (!arrowKeys[2]) {
+                left = true;
+                arrowKeys[2] = true;
+            }
+            else {
+                left = false;
+            }
+        } else
+            arrowKeys[2] = false;
+        
+        if (keys[KeyEvent.VK_RIGHT]) {
+            if (!arrowKeys[3]) {
+                right = true;
+                arrowKeys[3] = true;
+            }
+            else {
+                right = false;
+            }
+        } else
+            arrowKeys[3] = false;
     }
 }

@@ -16,6 +16,9 @@ import java.awt.image.BufferStrategy;
  */
 public class Game implements Runnable {
     
+    /**
+     * start main game thread
+     */
     @Override
     public void run() {
         init();
@@ -52,7 +55,7 @@ public class Game implements Runnable {
     private Player player;
     private KeyManager keyManager;
     
-    /*
+    /**
     * to create title, width and height and set the game is still not running
     * @param title to set the title of the window
     * @param width to set the width of the window
@@ -66,7 +69,7 @@ public class Game implements Runnable {
         keyManager = new KeyManager();
     }
     
-    /*
+    /**
     * initializing the display window of the game
     */
     private void init() {
@@ -76,11 +79,17 @@ public class Game implements Runnable {
         display.getJframe().addKeyListener(keyManager);
     }
     
+    /**
+     * updates all objects on a frame
+     */
     private void tick() {
         keyManager.tick();
         player.tick();
     }
     
+    /**
+     * renders all objects in a frame
+     */
     private void render() {
         Toolkit.getDefaultToolkit().sync();
         bs = display.getCanvas().getBufferStrategy();
@@ -97,19 +106,34 @@ public class Game implements Runnable {
             g.dispose();
         }
     }
-
+    
+    /**
+     * to get width
+     * @return width
+     */
     public int getWidth() {
         return width;
     }
-
+    
+    /**
+     * to get height
+     * @return height
+     */
     public int getHeight() {
         return height;
     }
-
+    
+    /**
+     * to get key manager
+     * @return keyManager
+     */
     public KeyManager getKeyManager() {
         return keyManager;
     }
     
+    /**
+     * start game
+     */
     public synchronized void start() {
         if (!running) {
             running = true;
@@ -118,6 +142,9 @@ public class Game implements Runnable {
         }
     }
     
+    /**
+     * stop game
+     */
     public synchronized void stop() {
         if (running) {
             running = false;
