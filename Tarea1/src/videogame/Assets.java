@@ -14,13 +14,23 @@ import java.awt.image.BufferedImage;
 public class Assets {
 
     public static BufferedImage background;
-    public static BufferedImage player;
+    public static BufferedImage playerSkins[];
+    public static BufferedImage colliding;
     
     /**
-     * Inicializar objetos BufferedImage
+     * initialize BufferedImage objects
      */
     public static void init() {
-        background = ImageLoader.loadImage("/images/background_mario.jpg");
-        player = ImageLoader.loadImage("/images/dvd.png");
+        background = ImageLoader.loadImage("/images/psy_background.gif");
+        
+        playerSkins = new BufferedImage[5];
+        
+        playerSkins[0] = ImageLoader.loadImage("/images/dvd.png");
+        playerSkins[1] = ImageLoader.loadImage("/images/dvd_blue.png");
+        playerSkins[2] = ImageLoader.loadImage("/images/dvd_green.png");
+        playerSkins[3] = ImageLoader.loadImage("/images/dvd_red.png");
+        playerSkins[4] = ImageLoader.loadImage("/images/dvd_white.png");
+        
+        colliding = ImageLoader.loadImage("/images/mario.png");
     }
 }

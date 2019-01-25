@@ -17,9 +17,16 @@ public class Player extends Item {
     private int width;
     private int height;
     private Game game;
-    private int acc;
     private int xVel;
     private int yVel;
+    int imageCycle;
+    
+    private final int acc;
+    private final int maxVel;
+    private final int maxCollisionFrames;
+    private int currCollisionFrames;
+    
+    private boolean isColliding;
 
     public Player(int x, int y, int direction, int width, int height, Game game) {
         super(x, y);
@@ -30,64 +37,118 @@ public class Player extends Item {
         this.acc = 1;
         this.xVel = 0;
         this.yVel = 0;
+        this.imageCycle = 0;
+        this.maxVel = 20;
+        this.maxCollisionFrames = 15;
+        this.currCollisionFrames = 0;
+        this.isColliding = false;
     }
 
     @Override
     public void tick() {
         if (game.getKeyManager().up) {
-            setyVel(getyVel() - getAcc());
+            if (getyVel() - getAcc() == 0) {
+                setyVel(-1);
+
+            } else {
+                setyVel(getyVel() - getAcc());
+            }
         }
         
         if (game.getKeyManager().down) {
-            setyVel(getyVel() + getAcc());
+            if (getyVel() + getAcc() == 0) {
+                setyVel(1);
 
+            } else {
+                setyVel(getyVel() + getAcc());
+            }
         }
         
         if (game.getKeyManager().left) {
-            setxVel(getxVel() - getAcc());
+            if (getxVel() - getAcc() == 0) {
+                setxVel(-1);
+
+            } else {
+                setxVel(getxVel() - getAcc());
+            }
         }
         
         if (game.getKeyManager().right) {
-            setxVel(getxVel() + getAcc());
+            if (getxVel() + getAcc() == 0) {
+                setxVel(1);
+
+            } else {
+                setxVel(getxVel() + getAcc());
+            }
         }
         
-        if (getxVel() >= 15) {
-            setxVel(15);
+        if (getxVel() >= maxVel) {
+            setxVel(maxVel);
         }
         
-        if (getxVel() <= -15) {
-            setxVel(-15);
+        if (getxVel() <= -maxVel) {
+            setxVel(-maxVel);
         }
         
-        if (getyVel() >= 15) {
-            setyVel(15);
+        if (getyVel() >= maxVel) {
+            setyVel(maxVel);
         }
         
-        if (getyVel() <= -15) {
-            setyVel(-15);
+        if (getyVel() <= -maxVel) {
+            setyVel(-maxVel);
         }
-       
-        setX(getX() + xVel);
-        setY(getY() + yVel);
+        
+        setX(getX() + getxVel());
+        setY(getY() + getyVel());
         
         if (getX() + 140 >= game.getWidth()) {
             setxVel(getxVel()*-1);
+            isColliding = true;
+            currCollisionFrames = 0;
+            imageCycle++;
         }
         else if (getX() <= -30) {
             setxVel(getxVel()*-1);
+            isColliding = true;
+            currCollisionFrames = 0;
+            imageCycle++;
         }
         
         if (getY() + 90 >= game.getHeight()) {
             setyVel(getyVel()*-1);
+            isColliding = true;
+            currCollisionFrames = 0;
+            imageCycle++;
         }
         else if (getY() <= -10) {
             setyVel(getyVel()*-1);
+            isColliding = true;
+            currCollisionFrames = 0;
+            imageCycle++;
+        }
+        
+        if (isColliding) {
+            currCollisionFrames++;
+            
+            if (currCollisionFrames >= maxCollisionFrames) {
+                isColliding = false;
+            }
+            
+        }
+        
+        if (imageCycle > 4) {
+            imageCycle = 0;
         }
     }
     
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
+        if (isColliding) {
+            g.drawImage(Assets.colliding, getX(), getY(), getWidth(), getHeight(), null);
+        } else {
+            g.drawImage(Assets.playerSkins[imageCycle], getX(), getY(), getWidth(), getHeight(), null);
+        }
+
     }
     
     /**

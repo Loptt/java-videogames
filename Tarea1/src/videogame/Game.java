@@ -98,7 +98,7 @@ public class Game implements Runnable {
             display.getCanvas().createBufferStrategy(3);
         }
         else {
-                g = bs.getDrawGraphics();
+            g = bs.getDrawGraphics();
             g.clearRect(0, 0, width, height);
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
