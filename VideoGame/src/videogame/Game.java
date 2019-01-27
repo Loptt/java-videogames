@@ -50,8 +50,9 @@ public class Game implements Runnable {
     private boolean running;
     private Player player;
     private KeyManager keyManager;
+    private MouseManager mouseManager;
     
-    /*
+    /**
     * to create title, width and height and set the game is still not running
     * @param title to set the title of the window
     * @param width to set the width of the window
@@ -63,9 +64,10 @@ public class Game implements Runnable {
         this.height = height;
         running = false;
         keyManager = new KeyManager();
+        mouseManager = new MouseManager();
     }
     
-    /*
+    /**
     * initializing the display window of the game
     */
     private void init() {
@@ -73,6 +75,10 @@ public class Game implements Runnable {
         Assets.init();
         player = new Player(0, getHeight() - 100, 1, 100, 100, this);
         display.getJframe().addKeyListener(keyManager);
+        display.getJframe().addMouseListener(mouseManager);
+        display.getJframe().addMouseMotionListener(mouseManager);
+        display.getCanvas().addMouseListener(mouseManager);
+        display.getCanvas().addMouseMotionListener(mouseManager);
     }
     
     private void tick() {
@@ -106,6 +112,10 @@ public class Game implements Runnable {
 
     public KeyManager getKeyManager() {
         return keyManager;
+    }
+
+    public MouseManager getMouseManager() {
+        return mouseManager;
     }
     
     public synchronized void start() {

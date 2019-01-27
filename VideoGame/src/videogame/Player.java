@@ -30,6 +30,12 @@ public class Player extends Item {
 
     @Override
     public void tick() {
+        
+        if (game.getMouseManager().isIzquierdo()) {
+            setX(game.getMouseManager().getX());
+            setY(game.getMouseManager().getY());
+        }
+        
         if (game.getKeyManager().up) {
             setY(getY() - speed);
         }
