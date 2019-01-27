@@ -6,6 +6,7 @@
 package videogame;
 
 import java.awt.Graphics;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -53,6 +54,12 @@ public class Player extends Item {
             } else {
                 setyVel(getyVel() - getAcc());
             }
+            
+            if (getxVel() != 0) {
+                setyVel(abs(getxVel()) * -1);
+            }
+            
+            setxVel(0);
         }
         
         if (game.getKeyManager().down) {
@@ -62,6 +69,12 @@ public class Player extends Item {
             } else {
                 setyVel(getyVel() + getAcc());
             }
+            
+            if (getxVel() != 0) {
+                setyVel(abs(getxVel()));
+            }
+            
+            setxVel(0);
         }
         
         if (game.getKeyManager().left) {
@@ -71,6 +84,12 @@ public class Player extends Item {
             } else {
                 setxVel(getxVel() - getAcc());
             }
+            
+            if (getyVel() != 0) {
+                setxVel(abs(getyVel()) * -1);
+            }
+            
+            setyVel(0);
         }
         
         if (game.getKeyManager().right) {
@@ -80,6 +99,12 @@ public class Player extends Item {
             } else {
                 setxVel(getxVel() + getAcc());
             }
+            
+            if (getyVel() != 0) {
+                setxVel(abs(getyVel()));
+            }
+            
+            setyVel(0);
         }
         
         if (getxVel() >= maxVel) {
