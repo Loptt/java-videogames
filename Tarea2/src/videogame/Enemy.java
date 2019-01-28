@@ -26,21 +26,21 @@ public class Enemy extends Item {
         this.game = game;
         this.xVel = 0;
         this.yVel = 0;
-        this.acc = 2;
-        this.maxVel = 15;
+        this.acc = 1;
+        this.maxVel = 5;
         this.player = player;
     }
 
     @Override
     public void tick() {
         
-        if (player.getBody().getX() > getBody().getX()) {
+        if (player.getX() > getX()) {
             xVel += acc;
         } else {
             xVel -= acc;
         }
         
-        if (player.getBody().getY() > getBody().getY()) {
+        if (player.getY() > getY()) {
             yVel += acc;
         } else {
             yVel -= acc;
@@ -58,14 +58,14 @@ public class Enemy extends Item {
         if (yVel <= -maxVel)
             yVel = -maxVel;
         
-        getBody().setLocation((int) getBody().getX() + xVel, (int) getBody().getY() + yVel);
+        setLocation((int) getX() + xVel, (int) getY() + yVel);
 
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.enemy, (int) getBody().getX(), (int) getBody().getY(),
-                (int) getBody().getWidth(), (int) getBody().getHeight(), null);
+        g.drawImage(Assets.enemy, (int) getX(), (int) getY(),
+                (int) getWidth(), (int) getHeight(), null);
     }
     
 }

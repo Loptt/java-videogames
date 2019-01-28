@@ -6,6 +6,7 @@
 package videogame;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
 /**
  *
@@ -14,23 +15,38 @@ import java.awt.Graphics;
 public class Player extends Item {
 
     private final Game game;
+    private int lives;
 
     public Player(int x, int y, int width, int height, Game game) {
         super(x, y, width, height);
         this.game = game;
+        this.lives = 3;
     }
 
     @Override
     public void tick() {
        if (game.getMouseManager().isIzquierdo()) {
-           getBody().setLocation(game.getMouseManager().getX() - (int) getBody().getWidth() / 2
-                   , game.getMouseManager().getY() - (int) getBody().getHeight() / 2);
+           
+           Point p = new Point(game.getMouseManager().getX(), game.getMouseManager().getY());
+           
+           if (contains(p)) {
+               setLocation(game.getMouseManager().getX() - (int) getWidth() / 2
+                   , game.getMouseManager().getY() - (int) getHeight() / 2);
+           }
        }
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.player, (int) getBody().getX(), (int) getBody().getY(),
-                (int) getBody().getWidth(), (int) getBody().getHeight(), null);
+        g.drawImage(Assets.player, (int) getX(), (int) getY(),
+                (int) getWidth(), (int) getHeight(), null);
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
     }
 }

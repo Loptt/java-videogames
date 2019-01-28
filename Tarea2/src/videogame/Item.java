@@ -14,20 +14,11 @@ import java.awt.Rectangle;
  *
  * @author charles
  */
-public abstract class Item {
+public abstract class Item extends Rectangle {
     
-    protected Rectangle body;
     
     public Item(int x, int y, int width, int height) {
-        body = new Rectangle(x, y, width, height);
-    }
-
-    public Rectangle getBody() {
-        return body;
-    }
-
-    public void setBody(Rectangle body) {
-        this.body = body;
+        super(x, y, width, height);
     }
     
     public abstract void tick();

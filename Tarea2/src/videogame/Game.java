@@ -5,7 +5,6 @@
  */
 package videogame;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
@@ -57,6 +56,11 @@ public class Game implements Runnable {
     private KeyManager keyManager;
     private MouseManager mouseManager;
     
+    private int timer;
+    private int timerCounter;
+    
+    private boolean isResetting;
+    
     /**
     * to create title, width and height and set the game is still not running
     * @param title to set the title of the window
@@ -67,6 +71,9 @@ public class Game implements Runnable {
         this.title = title;
         this.width = width;
         this.height = height;
+        this.timer = 0;
+        this.timerCounter = 0;
+        this.isResetting = false;
         running = false;
         keyManager = new KeyManager();
         mouseManager = new MouseManager();
@@ -85,22 +92,51 @@ public class Game implements Runnable {
         display.getJframe().addMouseMotionListener(mouseManager);
         display.getCanvas().addMouseListener(mouseManager);
         display.getCanvas().addMouseMotionListener(mouseManager);
+        
+        setItemsPositions();
     }
     
     /**
      * updates all objects on a frame
      */
     private void tick() {
-        keyManager.tick();
-        player.tick();
-        enemy.tick();
+        
+        if (isResetting) {
+            timerCounter++;
+            
+            if (timerCounter >= 50) {
+                timer++;
+                timerCounter = 0;
+            }
+            
+            if (timer >= 2) {
+                isResetting = false;
+                timer = 0;
+                timerCounter = 0;
+            }
+            
+        } else {
+            keyManager.tick();
+            player.tick();
+            enemy.tick();
+        }
+        
+        if (player.intersects(enemy)) {
+            setItemsPositions();
+            isResetting = true;
+            player.setLives(player.getLives() - 1);
+        }
+        
+        if (player.getLives() <= 0) {
+            //TODO: Game over
+        }
     }
     
     /**
      * renders all objects in a frame
      */
     private void render() {
-        Toolkit.getDefaultToolkit().sync();
+        Toolkit.getDefaultToolkit().sync(); //Linux
         bs = display.getCanvas().getBufferStrategy();
         
         if (bs == null) {
@@ -112,9 +148,29 @@ public class Game implements Runnable {
             g.drawImage(Assets.background, 0, 0, width, height, null);
             player.render(g);
             enemy.render(g);
+            
+            //Render lives in the screen
+            for (int i = 0; i < player.getLives(); i++) {
+                g.drawImage(Assets.life, 20, 20 + i * 50, 40, 40, null);
+            }
+            
             bs.show();
             g.dispose();
         }
+    }
+    
+    /**
+     * Initialize the positions of the current items
+     */
+    void setItemsPositions() {
+        int xPlayerPos = (int) (Math.random() * getWidth() / 2 + getWidth() / 2);
+        int yPlayerPos = (int) (Math.random() * getHeight() + 1);
+        
+        int xEnemyPos = (int) (Math.random() * getWidth() / 2);
+        int yEnemyPos = (int) (Math.random() * getHeight() + 1);
+            
+        player.setLocation(xPlayerPos, yPlayerPos);
+        enemy.setLocation(xEnemyPos, yEnemyPos);
     }
     
     /**
