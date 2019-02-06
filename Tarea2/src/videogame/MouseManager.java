@@ -21,7 +21,7 @@ public class MouseManager implements MouseListener, MouseMotionListener {
     private int y;
     
     public MouseManager() {
-        
+
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MouseManager implements MouseListener, MouseMotionListener {
     public int getY() {
         return y;
     }
-    
+
     public boolean isIzquierdo() {
         return izquierdo;
     }

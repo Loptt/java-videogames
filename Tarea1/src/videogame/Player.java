@@ -36,10 +36,10 @@ public class Player extends Item {
         this.height = height;
         this.game = game;
         this.acc = 1;
-        this.xVel = 0;
+        this.xVel = 1;
         this.yVel = 0;
         this.imageCycle = 0;
-        this.maxVel = 20;
+        this.maxVel = 50;
         this.maxCollisionFrames = 15;
         this.currCollisionFrames = 0;
         this.isColliding = false;

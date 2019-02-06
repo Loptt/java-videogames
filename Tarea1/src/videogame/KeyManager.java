@@ -34,12 +34,12 @@ public class KeyManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keys[e.getKeyCode()] = true;
+        keys[e.getKeyCode()] = false;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        keys[e.getKeyCode()] = false;
+        keys[e.getKeyCode()] = true;
     }
     
     public void tick() {

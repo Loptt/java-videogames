@@ -67,5 +67,12 @@ public class Enemy extends Item {
         g.drawImage(Assets.enemy, (int) getX(), (int) getY(),
                 (int) getWidth(), (int) getHeight(), null);
     }
-    
+
+    public int getMaxVel() {
+        return maxVel;
+    }
+
+    public void setMaxVel(int maxVel) {
+        this.maxVel = maxVel;
+    }
 }
