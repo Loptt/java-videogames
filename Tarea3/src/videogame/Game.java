@@ -5,10 +5,12 @@
  */
 package videogame;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 import javax.swing.JLabel;
 
 /**
@@ -57,16 +59,16 @@ public class Game implements Runnable {
     private boolean running;
     
     private Player player;
-    private Enemy enemy;
+    private ArrayList<Enemy> enemies;
     
     private KeyManager keyManager;
     private MouseManager mouseManager;
     
-    private int timer;
-    private int timerCounter;
-    
-    private boolean isResetting;
-    private boolean over;
+    private int maxEnemyAmount;
+    private int enemyIntervalFrames;
+    private int enemyFramesCounter;
+    private int collisionCounter;
+    //private JLabel text;
     
     /**
     * to create title, width and height and set the game is still not running
@@ -78,13 +80,17 @@ public class Game implements Runnable {
         this.title = title;
         this.width = width;
         this.height = height;
-        this.timer = 0;
-        this.timerCounter = 0;
-        this.isResetting = true;
+
         running = false;
-        over = false;
+
         keyManager = new KeyManager();
         mouseManager = new MouseManager();
+        
+        maxEnemyAmount = 15;
+        enemyIntervalFrames = 20;
+        enemyFramesCounter = 0;
+        
+        collisionCounter = 0;
     }
     
     /**
@@ -93,8 +99,10 @@ public class Game implements Runnable {
     private void init() {
         display = new Display(title, width, height);
         Assets.init();
-        player = new Player(100, 100, 100, 100, this);
-        enemy = new Enemy(100, 100 , 75, 75, this, player);
+        player = new Player(getWidth() / 2, getHeight() - 100, 100, 100, this);
+        
+        enemies = new ArrayList<>();
+        
         display.getJframe().addKeyListener(keyManager);
         display.getJframe().addMouseListener(mouseManager);
         display.getJframe().addMouseMotionListener(mouseManager);
@@ -108,61 +116,58 @@ public class Game implements Runnable {
      * updates all objects on a frame
      */
     private void tick() {
+        keyManager.tick();
+        player.tick();
         
-        /**
-         * This is activated when a collision occurs
-         * timerCounter counts the number of frames, when it passes 50, a second
-         * has passed.
-         * Timer increases every second, when it reaches 3, is resetting is set back
-         * to false and all counters are reset.
-         */
-        if (isResetting) {
-            timerCounter++;
-            
-            //One second has passed
-            if (timerCounter >= 50) {
-                timer++;
-                timerCounter = 0;
+        enemyFramesCounter++;
+        
+        if (enemyFramesCounter > enemyIntervalFrames) {
+            if (enemies.size() < maxEnemyAmount) {
+                //Place the enemy in a random position in the x axis
+                int xPos = (int) (Math.random() * (getWidth()-100));
+                //Give the enemy a random speed from 1 to 5
+                int speed = (int) (Math.random() * 4 + (6 - player.getLives())); 
+                Enemy enemy = new Enemy(xPos, -100, 100, 100, speed, this);
+                enemies.add(enemy);
             }
-            
-            //Three seconds have passed
-            if (timer >= 3) {
-                isResetting = false;
-                timer = 0;
-                timerCounter = 0;
-            }   
-        } else {
-            keyManager.tick();
-            player.tick();
-            enemy.tick();
+            enemyFramesCounter = 0;
         }
         
-        //If game is not over, handle collision and lives logic
-        if (!over) {
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies.get(i).tick();
             
-            //Colission between player and asteroid
-            if (player.intersects(enemy)) {
+            //Check if the enemy has reached the end
+            if (enemies.get(i).getY() > getHeight() - 100) {
+                //Enemy is eliminated naturally
+                enemies.remove(i);
+                player.setScore(player.getScore() - 20);
+                collisionCounter++;
                 
-                //Reset positions of visible elements to random locations
-                setItemsPositions();
-                
-                //Initialize boolean for counter
-                isResetting = true;
-                
-                //Decrease player lives by one
-                player.setLives(player.getLives() - 1);
                 Assets.crashSound.play();
-                
-                //Increase the speed of the asteroid by a multiple of the lives remaining
-                enemy.setMaxVel(5 * (4 - player.getLives()));
-                
-                //Increase the size of the asteriod bt a multiple of the lives remaning
-                enemy.setSize((int) enemy.getWidth() + 50 * (3 - player.getLives()), (int) enemy.getHeight() + 50 * (3 - player.getLives()));
+               
+            //Check if the player has collided with the enemy
+            } else if (player.intersects(enemies.get(i))) {
+                /**
+                 * check if the previous y coordinate of the player is greater than the current
+                 * enemy y coordinate, this will ensure that the enemy is only removed
+                 * when touched from below
+                 */
+                if (player.getPrevY() - 50 > enemies.get(i).getY()) {
+                    //Enemy is eliminated by player
+                    enemies.remove(i);
+                    player.setScore(player.getScore() + 100);
+                    
+                    Assets.coinSound.play();
+                }
             }
-
-            if (player.getLives() <= 0) {
-                over = true;
-            }
+        }
+        
+        //If 10 enemies have reached the bottom, decrease one life and reset counter
+        if (collisionCounter >= 10) {
+            player.setLives(player.getLives() - 1);
+            collisionCounter = 0;
+            enemyIntervalFrames -= 3;
+            maxEnemyAmount += 2;
         }
     }
     
@@ -180,24 +185,19 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.clearRect(0, 0, width, height);
             g.drawImage(Assets.background, 0, 0, width, height, null);
-                        
-            if (over) {
-                g.drawImage(Assets.gameover, 0, 0, width, height, null);
-            } else {
-                player.render(g);
-                enemy.render(g);
-                //Render lives in the screen
-                for (int i = 0; i < player.getLives(); i++) {
-                    g.drawImage(Assets.life, 20, 20 + i * 50, 40, 40, null);
-                }
-
-                //Render countdown in the screen
-                if (isResetting) {
-                    g.drawImage(Assets.nums[timer], width/2 - 200, height / 2 -200, 400, 400, null);   
-                }
-            }
-
+            player.render(g);
             
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).render(g);
+            }
+            
+            for (int i = 0; i < player.getLives(); i++) {
+                g.drawImage(Assets.life, 20 + i*50, 20, 50, 50, null);
+            }
+            
+            g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+            g.setColor(Color.WHITE);
+            g.drawString("Score: " + Integer.toString(player.getScore()), getWidth()- 270, 50);
             
             bs.show();
             g.dispose();
@@ -208,14 +208,7 @@ public class Game implements Runnable {
      * Initialize the positions of the current items
      */
     void setItemsPositions() {
-        int xPlayerPos = (int) (Math.random() * getWidth() / 2 + getWidth() / 2);
-        int yPlayerPos = (int) (Math.random() * getHeight() + 1);
         
-        int xEnemyPos = (int) (Math.random() * getWidth() / 2);
-        int yEnemyPos = (int) (Math.random() * getHeight() + 1);
-            
-        player.setLocation(xPlayerPos, yPlayerPos);
-        enemy.setLocation(xEnemyPos, yEnemyPos);
     }
     
     /**
