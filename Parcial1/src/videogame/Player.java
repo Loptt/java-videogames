@@ -24,7 +24,6 @@ public class Player extends Item {
         this.speed = 3;
         this.lives = (int) (Math.random() * 3 + 3);
         this.score = 0;
-        System.out.println(lives);
     }
 
     @Override

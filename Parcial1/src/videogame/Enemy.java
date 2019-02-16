@@ -35,7 +35,7 @@ public class Enemy extends Item {
             //Move the enemy vertically downwards
             setLocation((int) getX() , (int) (getY() + speed));
         } else {
-            //If already on the screen, change movement to diagonally
+            //If already on the screen, change movement to diagonal
             setLocation(((int) getX() + speed * (direction)), (int) getY());
             setLocation((int) getX(), (int) getY() + speed);
         }
@@ -49,12 +49,18 @@ public class Enemy extends Item {
     public void reset() {
         setLocation((int) (Math.random() * game.getWidth() -100) + 50, ((int) (Math.random() * 300 + getHeight()) * -1));
         
-        //Choose a random direction 1 or -1
+        /**
+         * Choose a random direction 1 or -1
+         * No need to check if there are always enemies in the two directions because that probability of 
+         * that happening is 1/32768
+         */
         if (((int) (Math.random() * 2)) == 1) {
             setDirection(1);
         } else {
             setDirection(-1);
         }
+        
+       
     }
 
     public int getDirection() {

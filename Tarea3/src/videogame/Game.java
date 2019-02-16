@@ -11,7 +11,6 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import javax.swing.JLabel;
 
 /**
  *
@@ -68,7 +67,7 @@ public class Game implements Runnable {
     private int enemyIntervalFrames;
     private int enemyFramesCounter;
     private int collisionCounter;
-    //private JLabel text;
+    private boolean over;
     
     /**
     * to create title, width and height and set the game is still not running
@@ -91,6 +90,8 @@ public class Game implements Runnable {
         enemyFramesCounter = 0;
         
         collisionCounter = 0;
+        
+        over = false;
     }
     
     /**
@@ -116,6 +117,10 @@ public class Game implements Runnable {
      * updates all objects on a frame
      */
     private void tick() {
+        
+        if (over)
+            return;
+        
         keyManager.tick();
         player.tick();
         
@@ -165,6 +170,10 @@ public class Game implements Runnable {
         //If 10 enemies have reached the bottom, decrease one life and reset counter
         if (collisionCounter >= 10) {
             player.setLives(player.getLives() - 1);
+            
+            if (player.getLives() <= 0) {
+                over = true;
+            }
             collisionCounter = 0;
             enemyIntervalFrames -= 3;
             maxEnemyAmount += 2;
@@ -175,7 +184,7 @@ public class Game implements Runnable {
      * renders all objects in a frame
      */
     private void render() {
-        Toolkit.getDefaultToolkit().sync(); //Linux
+        //Toolkit.getDefaultToolkit().sync(); //Linux
         bs = display.getCanvas().getBufferStrategy();
         
         if (bs == null) {
@@ -199,8 +208,14 @@ public class Game implements Runnable {
             g.setColor(Color.WHITE);
             g.drawString("Score: " + Integer.toString(player.getScore()), getWidth()- 270, 50);
             
+            if (over) {
+                g.drawImage(Assets.gameover, 0, 0, width, height, null);
+            }
+            
             bs.show();
             g.dispose();
+            
+            
         }
     }
     

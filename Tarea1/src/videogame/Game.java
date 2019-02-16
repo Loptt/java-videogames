@@ -91,7 +91,7 @@ public class Game implements Runnable {
      * renders all objects in a frame
      */
     private void render() {
-        Toolkit.getDefaultToolkit().sync();
+        //Toolkit.getDefaultToolkit().sync();
         bs = display.getCanvas().getBufferStrategy();
         
         if (bs == null) {

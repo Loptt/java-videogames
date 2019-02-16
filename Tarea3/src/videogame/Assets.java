@@ -30,6 +30,7 @@ public class Assets {
         life = ImageLoader.loadImage("/images/heart.png");
         enemy = ImageLoader.loadImage("/images/asteroid_enemy.png");
         exploding = ImageLoader.loadImage("/images/explosion.png");
+        gameover = ImageLoader.loadImage("/images/game_over.png");
         
         crashSound = new SoundClip("/sounds/crash.wav");
         eliminateSound = new SoundClip("/sounds/crash.wav");
