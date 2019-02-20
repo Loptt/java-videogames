@@ -16,8 +16,30 @@ public class Assets {
     public static BufferedImage background;
     public static BufferedImage player;
     
+    public static BufferedImage sprites;
+    public static BufferedImage playerUp[];
+    public static BufferedImage playerLeft[];
+    public static BufferedImage playerDown[];
+    public static BufferedImage playerRight[];
+    
     public static void init() {
         background = ImageLoader.loadImage("/images/background_mario.jpg");
         player = ImageLoader.loadImage("/images/mario.png");
+        
+        sprites = ImageLoader.loadImage("/images/sprite.png");
+        
+        SpriteSheet spritesheet = new SpriteSheet(sprites);
+        
+        playerUp = new BufferedImage[9];
+        playerLeft = new BufferedImage[9];
+        playerRight = new BufferedImage[9];
+        playerDown = new BufferedImage[9];
+        
+        for (int i = 0; i < 9; i++) {
+            playerUp[i] = spritesheet.crop(i * 66, 66, 66, 66);
+            playerLeft[i] = spritesheet.crop(i * 66, 0, 66, 66);
+            playerRight[i] = spritesheet.crop(i * 66, 66 *2, 66, 66);
+            playerDown[i] = spritesheet.crop(i * 66, 66*3, 66, 66);
+        }
     }
 }

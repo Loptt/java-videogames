@@ -18,14 +18,24 @@ public class Player extends Item {
     private int height;
     private Game game;
     private int speed;
+    
+    private Animation animationUp;
+    private Animation animationDown;
+    private Animation animationRight;
+    private Animation animationLeft;
 
-    public Player(int x, int y, int direction, int width, int height, Game game) {
+    public Player(int x, int y, int width, int height, Game game) {
         super(x, y);
         this.direction = direction;
         this.width = width;
         this.height = height;
         this.game = game;
         this.speed = 5;
+        
+        this.animationUp = new Animation(Assets.playerUp, 100);
+        this.animationDown = new Animation(Assets.playerDown, 100);
+        this.animationLeft = new Animation(Assets.playerLeft, 100);
+        this.animationRight = new Animation(Assets.playerRight, 100);
     }
 
     @Override
@@ -65,11 +75,16 @@ public class Player extends Item {
         else if (getY() <= -20) {
             setY(-20);
         }
+        
+        this.animationUp.tick();
+        this.animationDown.tick();
+        this.animationLeft.tick();
+        this.animationRight.tick();
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
+        g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
     }
 
     public int getDirection() {

@@ -148,7 +148,7 @@ public class Game implements Runnable {
     }
     
     private void render() {
-        //Toolkit.getDefaultToolkit().sync(); //Linux
+        Toolkit.getDefaultToolkit().sync(); //Linux
         bs = display.getCanvas().getBufferStrategy();
         
         if (bs == null) {
