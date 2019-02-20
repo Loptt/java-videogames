@@ -23,6 +23,10 @@ public class Player extends Item {
     private Animation animationDown;
     private Animation animationRight;
     private Animation animationLeft;
+    
+    private enum Direction { UP, DOWN, LEFT, RIGHT };
+    
+    private Direction dir;
 
     public Player(int x, int y, int width, int height, Game game) {
         super(x, y);
@@ -36,29 +40,30 @@ public class Player extends Item {
         this.animationDown = new Animation(Assets.playerDown, 100);
         this.animationLeft = new Animation(Assets.playerLeft, 100);
         this.animationRight = new Animation(Assets.playerRight, 100);
+        
+        dir = Direction.RIGHT;
     }
 
     @Override
     public void tick() {
-        
-        if (game.getMouseManager().isIzquierdo()) {
-            setX(game.getMouseManager().getX());
-            setY(game.getMouseManager().getY());
-        }
-        
+       
         if (game.getKeyManager().up) {
+            dir = Direction.UP;
             setY(getY() - speed);
         }
         
         if (game.getKeyManager().down) {
+            dir = Direction.DOWN;
             setY(getY() + speed);
         }
         
         if (game.getKeyManager().left) {
+            dir = Direction.LEFT;
             setX(getX() - speed);
         }
         
         if (game.getKeyManager().right) {
+            dir = Direction.RIGHT;
             setX(getX() + speed);
         }
         
@@ -84,7 +89,21 @@ public class Player extends Item {
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        switch(dir) {
+            case UP:
+                g.drawImage(animationUp.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+                break;
+            case DOWN:
+                g.drawImage(animationDown.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+                break;
+            case LEFT:
+                g.drawImage(animationLeft.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+                break;
+            case RIGHT:
+                g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+  
+                
+        }
     }
 
     public int getDirection() {

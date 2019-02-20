@@ -99,6 +99,7 @@ public class Game implements Runnable {
      */
     private void tick() {
        player.tick();
+       keyManager.tick();
     }
     
     /**

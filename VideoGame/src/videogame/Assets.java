@@ -24,18 +24,17 @@ public class Assets {
     
     public static void init() {
         background = ImageLoader.loadImage("/images/background_mario.jpg");
-        player = ImageLoader.loadImage("/images/mario.png");
+        player = ImageLoader.loadImage("/images/sprite.png");
         
-        sprites = ImageLoader.loadImage("/images/sprite.png");
-        
+        sprites = ImageLoader.loadImage("/images/sprite.png");        
         SpriteSheet spritesheet = new SpriteSheet(sprites);
         
-        playerUp = new BufferedImage[9];
-        playerLeft = new BufferedImage[9];
-        playerRight = new BufferedImage[9];
-        playerDown = new BufferedImage[9];
+        playerUp = new BufferedImage[4];
+        playerLeft = new BufferedImage[4];
+        playerRight = new BufferedImage[4];
+        playerDown = new BufferedImage[4];
         
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 4; i++) {
             playerUp[i] = spritesheet.crop(i * 66, 66, 66, 66);
             playerLeft[i] = spritesheet.crop(i * 66, 0, 66, 66);
             playerRight[i] = spritesheet.crop(i * 66, 66 *2, 66, 66);
